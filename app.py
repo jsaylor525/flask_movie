@@ -1,5 +1,12 @@
+"""
+\file
+
+flask_movie application
+"""
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask import render_template
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/flaskmovie'
@@ -19,7 +26,13 @@ class User(db.Model):
 
 @app.route('/')
 def index():
-    return "<h1 style=\"color: red\">hello flask</h1>"
+    return render_template('add_user.html')
+
+@app.route('/post_user', methods=['POST'])
+def post_user():
+    user = User(request.form['username'], request.form['email'])
+    db.session.add(user)
+    db.session.commit()
 
 if __name__ == "__main__":
     app.run()
